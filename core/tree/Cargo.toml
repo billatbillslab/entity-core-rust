@@ -1,0 +1,23 @@
+[package]
+name = "entity-tree"
+version = "0.8.0"
+edition.workspace = true
+description = "system/tree handler: get, put, listing"
+
+[dependencies]
+entity-ecf.workspace = true
+entity-hash.workspace = true
+entity-entity.workspace = true
+entity-handler.workspace = true
+entity-store.workspace = true
+entity-types.workspace = true
+entity-capability.workspace = true
+async-trait.workspace = true
+thiserror.workspace = true
+ciborium.workspace = true
+sha2.workspace = true
+tracing.workspace = true
+
+[dev-dependencies]
+entity-crypto.workspace = true
+tokio.workspace = true

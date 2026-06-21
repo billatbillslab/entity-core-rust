@@ -1,0 +1,25 @@
+[package]
+name = "entity-shell"
+version = "0.8.0"
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+description = "Cross-frontend verb dispatcher for the entity-core shell — consumed by egui, Godot, and the standalone entity-shell binary"
+
+[dependencies]
+# Streaming primitive — VerbOutput::Lines / Dispatch carry
+# `tokio::sync::mpsc::Receiver`. Picked per
+# `egui-entity-core-rust/docs/plans/SHELL-EXTRACTION-PHASE-1-NOTES.md`
+# §3.2 and Godot's compatibility note (drains cleanly from `_process`).
+tokio = { version = "1", default-features = false, features = ["sync"] }
+
+# Entity-body formatting for the `cat` verb. Lifted from egui's
+# `src/format.rs` so the crate produces a complete `EntityView` without
+# requiring each embedding to wire its own pretty-printer.
+ciborium.workspace = true
+
+[dev-dependencies]
+# Single-threaded tokio runtime to drive async verbs in unit tests.
+# Production builds pick their own runtime feature set; the dev-dep
+# enables `rt` + `macros` here only.
+tokio = { version = "1", features = ["sync", "rt", "macros"] }

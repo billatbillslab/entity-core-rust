@@ -1,0 +1,32 @@
+[package]
+name = "entity-revision"
+version = "0.8.0"
+edition.workspace = true
+description = "system/revision handler + revision engine for versioning, merge, and sync"
+
+[dependencies]
+entity-ecf.workspace = true
+entity-hash.workspace = true
+entity-entity.workspace = true
+entity-store.workspace = true
+entity-handler.workspace = true
+entity-types.workspace = true
+entity-tree.workspace = true
+# V7.64 §1.4: peer-id path-encoding helper (Base58 → `{peer_id_hex}` for
+# `system/revision/{H}/remotes/{peer_id_hex}` paths).
+entity-crypto.workspace = true
+async-trait.workspace = true
+ciborium.workspace = true
+thiserror.workspace = true
+tokio = { version = "1", features = ["sync"] }
+tracing.workspace = true
+
+[target.'cfg(not(target_arch = "wasm32"))'.dependencies]
+tokio = { version = "1", features = ["rt", "time"] }
+
+[target.'cfg(target_arch = "wasm32")'.dependencies]
+wasm-bindgen-futures = "0.4"
+
+[dev-dependencies]
+tokio = { workspace = true, features = ["macros", "rt", "rt-multi-thread", "time"] }
+entity-types.workspace = true

@@ -1,0 +1,19 @@
+[package]
+name = "entity-wire-conformance"
+version = "0.8.0"
+edition.workspace = true
+description = "ECF wire conformance harness — emit-canonical mode (Appendix E §E.4)"
+
+[[bin]]
+name = "wire-conformance"
+path = "src/main.rs"
+
+[dependencies]
+entity-ecf.workspace = true
+entity-hash.workspace = true
+entity-crypto.workspace = true
+ciborium.workspace = true
+clap.workspace = true
+anyhow.workspace = true
+sha2.workspace = true
+bs58.workspace = true

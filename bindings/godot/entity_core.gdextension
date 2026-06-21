@@ -1,0 +1,12 @@
+[configuration]
+entry_symbol = "gdext_rust_init"
+compatibility_minimum = 4.2
+reloadable = true
+
+[libraries]
+linux.debug.x86_64 = "res://bin/libentity_core_godot.so"
+linux.release.x86_64 = "res://bin/libentity_core_godot.so"
+macos.debug = "res://bin/libentity_core_godot.dylib"
+macos.release = "res://bin/libentity_core_godot.dylib"
+windows.debug.x86_64 = "res://bin/entity_core_godot.dll"
+windows.release.x86_64 = "res://bin/entity_core_godot.dll"

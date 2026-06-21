@@ -1,0 +1,36 @@
+[package]
+name = "entity-storage-substitute-http"
+version = "0.8.0"
+edition.workspace = true
+description = "EXTENSION-STORAGE-SUBSTITUTE-HTTP v1 — http convention; inline HTTP GET + hash-verify (Mechanism A)"
+
+# Native-only at first. The handler reaches for `reqwest`, which doesn't
+# compile for wasm32-unknown-unknown; a WASM path will light up later via
+# `web-sys::fetch` when the worker proxy needs it. Mirrors the
+# `extensions/local-files` pattern: crate body is gated on
+# `cfg(not(target_arch = "wasm32"))` at lib root; pure-Rust workspace deps
+# stay unconditional so cargo metadata is consistent across targets.
+
+[dependencies]
+entity-ecf.workspace = true
+entity-hash.workspace = true
+entity-entity.workspace = true
+entity-types.workspace = true
+entity-handler.workspace = true
+entity-capability.workspace = true
+entity-store.workspace = true
+entity-content.workspace = true
+entity-storage-substitute-sources.workspace = true
+entity-wire.workspace = true
+async-trait.workspace = true
+ciborium.workspace = true
+sha2.workspace = true
+thiserror.workspace = true
+tracing.workspace = true
+
+[target.'cfg(not(target_arch = "wasm32"))'.dependencies]
+tokio = { workspace = true, features = ["sync", "rt", "macros"] }
+reqwest = { version = "0.12", default-features = false, features = ["rustls-tls"] }
+
+[dev-dependencies]
+tokio = { workspace = true, features = ["macros", "rt", "rt-multi-thread"] }

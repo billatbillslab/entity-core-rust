@@ -1,0 +1,25 @@
+[package]
+name = "entity-role"
+version = "0.8.0"
+edition.workspace = true
+description = "system/role handler — named grant bundles + context-scoped exclusion (EXTENSION-ROLE v1.5)"
+
+[dependencies]
+entity-ecf.workspace = true
+entity-hash.workspace = true
+entity-entity.workspace = true
+entity-crypto.workspace = true
+entity-store.workspace = true
+entity-types.workspace = true
+entity-capability.workspace = true
+entity-handler.workspace = true
+entity-attestation.workspace = true
+async-trait.workspace = true
+ciborium.workspace = true
+thiserror.workspace = true
+tokio = { version = "1", features = ["sync"] }
+tracing.workspace = true
+web-time = "1.1"
+
+[dev-dependencies]
+tokio = { workspace = true, features = ["macros", "rt", "rt-multi-thread", "time"] }

@@ -1,0 +1,28 @@
+[package]
+name = "entity-wasm-worker-proxy"
+version = "0.8.0"
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+description = "Main-thread proxy for an entity-core peer hosted in a Web Worker. Mirrors the SDK L1 surface over postMessage; ships an in-process snapshot cache fed by subscription events. WASM-only."
+
+[dependencies]
+entity-wasm-worker-protocol = { path = "../wasm-worker-protocol", features = ["conversions"] }
+entity-peer = { path = "../../core/peer", default-features = false }
+serde = { workspace = true, features = ["derive"] }
+thiserror.workspace = true
+futures = "0.3"
+ciborium.workspace = true
+wasm-bindgen = "0.2"
+wasm-bindgen-futures = "0.4"
+js-sys = "0.3"
+gloo-timers = { version = "0.3", features = ["futures"] }
+web-sys = { version = "0.3", features = [
+    "Worker",
+    "WorkerOptions",
+    "MessageEvent",
+    "MessagePort",
+    "MessageChannel",
+    "DedicatedWorkerGlobalScope",
+    "ErrorEvent",
+] }

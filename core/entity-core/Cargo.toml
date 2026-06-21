@@ -1,0 +1,24 @@
+[package]
+name = "entity-core"
+version = "0.8.0"
+edition.workspace = true
+description = "Facade crate: re-exports Entity Core Protocol public API"
+
+[features]
+default = ["entity-peer/default"]
+websocket = ["entity-peer/websocket"]
+sqlite = ["entity-peer/sqlite"]
+
+[dependencies]
+entity-ecf.workspace = true
+entity-hash.workspace = true
+entity-entity.workspace = true
+entity-crypto.workspace = true
+entity-store.workspace = true
+entity-types.workspace = true
+entity-capability.workspace = true
+entity-wire.workspace = true
+entity-handler.workspace = true
+entity-protocol.workspace = true
+entity-tree.workspace = true
+entity-peer.workspace = true

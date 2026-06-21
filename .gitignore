@@ -1,0 +1,12 @@
+/target
+Cargo.lock
+
+# Per-user Claude Code local settings — never committed (leaks local paths).
+/.claude/settings.local.json
+
+# Local sibling-dev override (kept out of the committed manifest per
+# release convention; a lone clone builds from the git-pinned deps).
+/.cargo/config.toml.local
+
+# Per-machine podman resource-cap overrides (Makefile -include).
+/caps.local.mk

@@ -1,0 +1,27 @@
+[package]
+name = "entity-cli"
+version = "0.8.0"
+edition.workspace = true
+description = "Entity Core Protocol peer CLI"
+
+[features]
+default = ["sqlite"]
+sqlite = ["entity-core/sqlite"]
+
+[[bin]]
+name = "entity"
+path = "src/main.rs"
+
+[dependencies]
+entity-core.workspace = true
+entity-registry.workspace = true
+clap.workspace = true
+serde.workspace = true
+toml.workspace = true
+tokio.workspace = true
+tracing.workspace = true
+tracing-subscriber.workspace = true
+base64.workspace = true
+directories.workspace = true
+anyhow.workspace = true
+thiserror.workspace = true

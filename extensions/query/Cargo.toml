@@ -1,0 +1,28 @@
+[package]
+name = "entity-query"
+version = "0.8.0"
+edition.workspace = true
+description = "system/query handler — find and count operations with secondary indexes"
+
+[features]
+default = []
+sqlite = ["dep:rusqlite", "entity-store/sqlite"]
+
+[dependencies]
+rusqlite = { workspace = true, optional = true }
+entity-ecf.workspace = true
+entity-hash.workspace = true
+entity-entity.workspace = true
+entity-store.workspace = true
+entity-handler.workspace = true
+entity-capability.workspace = true
+entity-types.workspace = true
+ciborium.workspace = true
+async-trait.workspace = true
+thiserror.workspace = true
+tracing.workspace = true
+base64.workspace = true
+
+[dev-dependencies]
+tokio = { workspace = true, features = ["macros", "rt"] }
+entity-crypto.workspace = true

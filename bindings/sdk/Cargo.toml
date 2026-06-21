@@ -1,0 +1,83 @@
+[package]
+name = "entity-sdk"
+version = "0.8.0"
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+description = "Application SDK for entity-core-rust — PeerContext, EntitySDK, scope handles, subscriptions, handler registration"
+
+[dependencies]
+entity-ecf.workspace = true
+entity-hash.workspace = true
+entity-entity.workspace = true
+entity-store.workspace = true
+entity-types.workspace = true
+entity-crypto.workspace = true
+entity-handler.workspace = true
+entity-capability.workspace = true
+# Direct dep on entity-protocol so the SDK can surface
+# `is_operator_class_for` (GUIDE-CAPABILITIES §10) at the consumer
+# boundary — app code consults via SDK, not by reaching into
+# entity-protocol directly. Already a transitive dep through entity-peer.
+entity-protocol.workspace = true
+# Direct dep on entity-tree so `BootstrapInputs` can name `Arc<TreeHandler>`
+# (the owned snapshot used by `IdentityOps::bootstrap` /
+# `restore_from_bundle` to escape `&PeerContext` borrows). entity-tree is
+# already a transitive dep through entity-peer; the direct edge is just
+# for type-naming.
+entity-tree.workspace = true
+# Declared locally (not workspace=true) so default-features=false actually
+# applies. The SDK explicitly opts into the extension features via its own
+# feature flags below, and consumers select the WebSocket transport via
+# the `native-ws` flag — none of these should leak in by default.
+entity-peer = { path = "../../core/peer", default-features = false }
+async-trait.workspace = true
+ciborium.workspace = true
+thiserror.workspace = true
+tracing.workspace = true
+web-time.workspace = true
+
+[features]
+# Pass-through feature flags mirror entity-peer's extension flags 1:1.
+# Default set matches what egui-entity-core-rust uses today.
+default = ["inbox", "continuation", "subscription", "clock", "revision", "query", "history", "sqlite"]
+inbox = ["entity-peer/inbox"]
+continuation = ["entity-peer/continuation"]
+subscription = ["entity-peer/subscription"]
+clock = ["entity-peer/clock"]
+revision = ["entity-peer/revision"]
+query = ["entity-peer/query"]
+history = ["entity-peer/history"]
+compute = ["entity-peer/compute"]
+handlers = ["entity-peer/handlers"]
+attestation = ["entity-peer/attestation"]
+quorum = ["entity-peer/quorum"]
+identity = ["entity-peer/identity"]
+role = ["entity-peer/role"]
+type-system = ["entity-peer/type-system"]
+content = ["entity-peer/content"]
+local-files = ["entity-peer/local-files"]
+sqlite = ["entity-peer/sqlite"]
+wasm-persist = ["entity-peer/wasm-persist"]
+wasm-idb-persist = ["entity-peer/wasm-idb-persist"]
+
+# Native-only WebSocket transport. Enables `WebSocketConnector` in
+# `peer_manager`. WASM consumers must NOT enable this — entity-peer's
+# `websocket` feature pulls in tokio-tungstenite which won't compile on
+# wasm32. WASM peers use the always-available `BrowserWebSocketConnector`
+# without any feature flag.
+native-ws = ["entity-peer/websocket"]
+
+# Native dispatch uses tokio for spawning async writes (`dispatch_write`,
+# subscription unsubscribe drop). Pulled in only on non-wasm targets.
+[target.'cfg(not(target_arch = "wasm32"))'.dependencies]
+tokio = { workspace = true }
+
+# WASM dispatch uses spawn_local. wasm-bindgen-futures is the bridge to
+# JS Promises and the rAF loop the apps run on. js-sys / wasm-bindgen are
+# needed for `Date::now()` rate-limiting and Promise yields in the event
+# bridge — small, leaf-level usage that doesn't leak to public APIs.
+[target.'cfg(target_arch = "wasm32")'.dependencies]
+wasm-bindgen-futures = "0.4"
+wasm-bindgen = "0.2"
+js-sys = "0.3"

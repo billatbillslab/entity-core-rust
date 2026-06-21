@@ -1,0 +1,7 @@
+target/
+.git/
+.claude/
+.vscode/
+.idea/
+**/*.swp
+**/*.swo

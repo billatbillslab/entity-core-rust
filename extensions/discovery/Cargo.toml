@@ -1,0 +1,30 @@
+[package]
+name = "entity-discovery"
+version = "0.8.0"
+edition.workspace = true
+description = "EXTENSION-DISCOVERY v1.0 — find-and-prompt substrate + mDNS backend"
+
+[dependencies]
+entity-ecf.workspace = true
+entity-hash.workspace = true
+entity-entity.workspace = true
+entity-types.workspace = true
+entity-store.workspace = true
+entity-handler.workspace = true
+async-trait.workspace = true
+ciborium.workspace = true
+thiserror.workspace = true
+tracing.workspace = true
+tokio = { version = "1", features = ["sync", "time"] }
+web-time = "1.1"
+
+# mDNS is native-only — browsers cannot speak multicast UDP (§3.4). The crate
+# compiles for wasm32 with the mDNS backend absent; `:scan(backend=mdns)` there
+# returns an unsupported-backend result rather than panicking.
+[target.'cfg(not(target_arch = "wasm32"))'.dependencies]
+mdns-sd = "0.20"
+flume = "0.11"
+
+[dev-dependencies]
+entity-crypto.workspace = true
+tokio = { workspace = true, features = ["macros", "rt", "rt-multi-thread", "time"] }

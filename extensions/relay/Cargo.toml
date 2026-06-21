@@ -1,0 +1,24 @@
+[package]
+name = "entity-relay"
+version = "0.8.0"
+edition.workspace = true
+description = "EXTENSION-RELAY v1.0 — opaque-envelope transport substrate (Mode F forward + Mode S store-and-poll)"
+
+[dependencies]
+entity-ecf.workspace = true
+entity-hash.workspace = true
+entity-entity.workspace = true
+entity-types.workspace = true
+entity-store.workspace = true
+entity-handler.workspace = true
+entity-crypto.workspace = true
+entity-route.workspace = true
+async-trait.workspace = true
+ciborium.workspace = true
+thiserror.workspace = true
+tracing.workspace = true
+tokio = { version = "1", features = ["sync"] }
+web-time = "1.1"
+
+[dev-dependencies]
+tokio = { workspace = true, features = ["macros", "rt", "rt-multi-thread"] }

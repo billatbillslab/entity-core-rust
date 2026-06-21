@@ -1,0 +1,11 @@
+[package]
+name = "entity-durability"
+version = "0.8.0"
+edition.workspace = true
+description = "EXTENSION-DURABILITY v0.1 (exploratory) — durability strength contract and reconcile logic"
+
+[dependencies]
+entity-ecf.workspace = true
+entity-entity.workspace = true
+entity-handler.workspace = true
+ciborium.workspace = true

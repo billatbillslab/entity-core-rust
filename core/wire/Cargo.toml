@@ -1,0 +1,17 @@
+[package]
+name = "entity-wire"
+version = "0.8.0"
+edition.workspace = true
+description = "Length-prefixed framing and envelope codec"
+
+[dependencies]
+entity-ecf.workspace = true
+entity-hash.workspace = true
+entity-entity.workspace = true
+ciborium.workspace = true
+tokio = { version = "1", features = ["io-util"] }
+thiserror.workspace = true
+tracing.workspace = true
+
+[dev-dependencies]
+tokio = { version = "1", features = ["io-util", "macros", "rt"] }

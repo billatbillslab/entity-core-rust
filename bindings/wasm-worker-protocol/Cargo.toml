@@ -1,0 +1,43 @@
+[package]
+name = "entity-wasm-worker-protocol"
+version = "0.8.0"
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+description = "Wire protocol shared between wasm-worker-host (in worker) and wasm-worker-proxy (on main thread). Serializable shadow of the SDK L1 surface — RPC ferrying, not a protocol layer. See crate-level docs for boundary rule."
+
+[dependencies]
+serde = { workspace = true, features = ["derive"] }
+serde_bytes = "0.11"
+ciborium.workspace = true
+# Imported solely for the `L1_WORKER_MIRRORED_SURFACE` const, which the
+# coverage check uses as the source of truth for "what L1 SDK methods
+# should have wire variants." See CONTRIBUTING.md.
+# Declared locally (not workspace=true) so default-features=false actually
+# applies — workspace dep inheritance doesn't reliably propagate
+# default-features overrides. Same pattern as bindings/sdk's entity-peer dep.
+entity-sdk = { path = "../sdk", default-features = false }
+
+# Optional deps activated by the `conversions` feature — see the
+# conversions module gated on cfg(feature = "conversions").
+entity-entity = { path = "../../core/entity", optional = true }
+entity-hash = { path = "../../core/hash", optional = true }
+entity-handler = { path = "../../core/handler", optional = true }
+entity-capability = { path = "../../core/capability", optional = true }
+entity-store = { path = "../../core/store", optional = true }
+thiserror = { workspace = true, optional = true }
+
+[features]
+default = []
+# Bidirectional `From`/`Into` impls between this crate's wire types and the
+# real SDK / kernel types. Enabled by `wasm-worker-proxy` (consumer side)
+# and `wasm-worker-host` (worker side); disabled for any consumer that only
+# needs the wire types themselves.
+conversions = [
+    "dep:entity-entity",
+    "dep:entity-hash",
+    "dep:entity-handler",
+    "dep:entity-capability",
+    "dep:entity-store",
+    "dep:thiserror",
+]

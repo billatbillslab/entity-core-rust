@@ -1,0 +1,82 @@
+# Entity Core Rust — container orchestration (DEV CONVENIENCE).
+#
+# `make` is the canonical entrypoint (make + podman only — see Makefile). This
+# compose file is an optional developer convenience for live-mounted iteration
+# (interactive shell, fast incremental rebuilds via named volumes); it is NOT
+# the release build door. No host toolchain required either way.
+#
+# Dev services share a base via the `dev-base` anchor: they target the
+# `toolchain` stage (no source baked in), bind-mount the repo at /work, and
+# use named volumes for the cargo registry + target dir so iteration is fast.
+
+x-dev-base: &dev-base
+  build:
+    context: .
+    target: toolchain
+  image: entity-core-toolchain:latest
+  working_dir: /work
+  volumes:
+    # `:z` relabels the host bind for SELinux (Fedora/RHEL) — harmless on
+    # systems without SELinux. Required for Podman on Fedora to let the
+    # container read the workspace.
+    - .:/work:z
+    - cargo-registry:/usr/local/cargo/registry
+    - cargo-git:/usr/local/cargo/git
+    - cargo-target:/work/target
+
+services:
+  # Production runtime — slim image with just the entity binary.
+  peer:
+    build:
+      context: .
+      target: runtime
+    image: entity-core:latest
+
+  # Interactive shell with the full Rust toolchain. Source is mounted live.
+  shell:
+    <<: *dev-base
+    command: bash
+    stdin_open: true
+    tty: true
+
+  build:
+    <<: *dev-base
+    command: cargo build --release
+
+  test:
+    <<: *dev-base
+    command: cargo test
+
+  clippy:
+    <<: *dev-base
+    command: cargo clippy --all-targets -- -D warnings
+
+  # Read-only static checks (mirrors `make lint`): clippy + rustfmt --check.
+  lint:
+    <<: *dev-base
+    command: sh -c 'cargo clippy --all-targets -- -D warnings && cargo fmt --check'
+
+  # Autoformat — WRITES (mirrors `make fmt`). The read-only check lives in `lint`.
+  fmt:
+    <<: *dev-base
+    command: cargo fmt
+
+  # Cross-compile check for wasm32-unknown-unknown. Mirrors the CI command
+  # documented in CLAUDE.md.
+  wasm:
+    <<: *dev-base
+    command:
+      - cargo
+      - build
+      - --target
+      - wasm32-unknown-unknown
+      - -p
+      - entity-peer
+      - --no-default-features
+      - --features
+      - inbox,continuation,subscription,clock,revision,query,history,compute,handlers,identity,role,registry,discovery,type-system,content
+
+volumes:
+  cargo-registry:
+  cargo-git:
+  cargo-target:

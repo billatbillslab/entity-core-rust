@@ -1,0 +1,61 @@
+[project]
+name   = "Entity Core Rust"
+slug   = "entity-core-rust"
+repo   = "entity-core-rust"
+github = "https://github.com/EntityChurch/entity-core-rust"
+intro  = """
+Entity Core Rust is a reference implementation of the Entity Core Protocol
+(v7.9) — one of three independent implementations alongside the Go (oracle) and
+Python references. It is a standalone Cargo workspace: a strict crate DAG (ECF
+encoding → hashing → entities → crypto/store/types → capability/wire/handler →
+protocol/tree/peer) with the protocol extensions (inbox, revision, identity,
+registry, relay, encryption, …) and language/runtime bindings (FFI, Godot, a
+higher-level SDK, and a WASM worker stack) layered on top. It depends only on
+the protocol spec for its contract; downstream, the browser and Godot apps depend
+on this repo's crates (git-pinned to a release tag). This is a 0.8 research
+preview — the protocol is not locked at 1.0 — but the core wire format,
+capabilities, and tree semantics are interop-validated against the Go and Python
+peers, not just self-tested.
+"""
+
+[[doc]]
+path  = "README.md"
+title = "Overview & build"
+blurb = "What the repo is, the crate layout, and the make + podman build/test flow."
+group = "Overview"
+
+[[doc]]
+path  = "docs/CLI.md"
+title = "Command-line tools"
+blurb = "The `entity` peer CLI (identity/peer subcommands) and the `make` build targets."
+group = "Tools"
+
+[[doc]]
+path  = "docs/ARCHITECTURE.md"
+title = "Architecture plan"
+blurb = "The crate DAG, design decisions, and how the implementation maps to the spec."
+group = "Architecture"
+
+[[doc]]
+path  = "docs/ARCHITECTURE-WASM-AND-TRANSPORT.md"
+title = "Transport abstraction & WASM peer"
+blurb = "The transport-agnostic networking model (TCP/WebSocket/HTTP) and the wasm32 peer."
+group = "Architecture"
+
+[[doc]]
+path  = "docs/SPEC-AMBIGUITIES.md"
+title = "Spec ambiguities log"
+blurb = "The standing record of V7 spec ambiguities/gaps found while implementing, with the exact passage and the interim choice — the channel back to the architecture team."
+group = "Spec findings"
+
+[[doc]]
+path  = "docs/SPEC-AMBIGUITIES-ROLE.md"
+title = "Spec ambiguities — EXTENSION-ROLE"
+blurb = "The ROLE-specific ambiguity log (resolved), retained for traceability of how the implementation choices were reconciled with the spec."
+group = "Spec findings"
+
+[[doc]]
+path  = "docs/BACKLOG.md"
+title = "Implementation backlog"
+blurb = "Durable, spec-traced forward work for the Rust implementation (not a dated status snapshot)."
+group = "Spec findings"

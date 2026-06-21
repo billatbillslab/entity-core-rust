@@ -1,0 +1,41 @@
+[package]
+name = "entity-wasm-worker-host"
+version = "0.8.0"
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+description = "Library that hosts an entity-core peer SDK inside a dedicated Web Worker. Consumers ship a thin wasm binary that depends on this crate and calls run_worker(handler_factories) with their handler set."
+
+[dependencies]
+entity-wasm-worker-protocol = { path = "../wasm-worker-protocol", features = ["conversions"] }
+# entity-sdk is the thing being hosted. Local-path + default-features=false
+# so we don't pull sqlite/native deps that don't compile for wasm32.
+# Same pattern as bindings/sdk's entity-peer dep and our own protocol crate's
+# entity-sdk dep. Consumer enables the feature set they need via their own
+# wasm binary's Cargo.toml.
+entity-sdk = { path = "../sdk", default-features = false, features = [
+    "inbox",
+    "continuation",
+    "subscription",
+    "clock",
+    "revision",
+    "query",
+    "history",
+    "compute",
+    "wasm-persist",
+] }
+entity-entity = { path = "../../core/entity" }
+entity-hash = { path = "../../core/hash" }
+entity-handler = { path = "../../core/handler" }
+entity-crypto = { path = "../../core/crypto" }
+entity-peer = { path = "../../core/peer", default-features = false }
+
+serde = { workspace = true, features = ["derive"] }
+ciborium.workspace = true
+wasm-bindgen = "0.2"
+wasm-bindgen-futures = "0.4"
+js-sys = "0.3"
+web-sys = { version = "0.3", features = [
+    "DedicatedWorkerGlobalScope",
+    "MessageEvent",
+] }

@@ -1,0 +1,47 @@
+[package]
+name = "entity-local-files"
+version = "0.8.0"
+edition.workspace = true
+description = "DOMAIN-LOCAL-FILES v1.2 — local/files handler over CONTENT v3.5 substrate"
+
+[dependencies]
+# Cross-target workspace deps — the crate body is empty on wasm32 via
+# `#![cfg(not(target_arch = "wasm32"))]` at src/lib.rs, but these are
+# cheap pure-Rust workspace primitives and are kept here so cargo
+# metadata / docs / IDE tooling sees a consistent dep graph across
+# targets.
+entity-ecf.workspace = true
+entity-hash.workspace = true
+entity-entity.workspace = true
+entity-types = { workspace = true }
+entity-handler.workspace = true
+entity-capability.workspace = true
+entity-store.workspace = true
+entity-content.workspace = true
+async-trait.workspace = true
+ciborium.workspace = true
+thiserror.workspace = true
+tracing.workspace = true
+
+# Native-only deps. The crate's entire surface is gated on
+# `cfg(not(target_arch = "wasm32"))`, but Cargo resolves and builds the
+# dep graph BEFORE applying source-level cfg gates — so leaving these
+# in the unconditional `[dependencies]` table caused
+# `notify`→`mio` (no wasm32 support) to break wasm32 builds for any
+# consumer that enabled the `local-files` feature on entity-peer /
+# entity-sdk. Target-gating moves them out of the wasm32 build graph
+# entirely (matching what the source-level cfg already says).
+#
+# Per the eGUI cross-check finding ("Ask 1.5") — chosen
+# over a `local-files-watch` sub-feature because notify / mime_guess /
+# glob are all used together in the native-cfg'd body; there's no
+# native build case that wants "local-files without watcher."
+[target.'cfg(not(target_arch = "wasm32"))'.dependencies]
+tokio = { workspace = true, features = ["sync", "rt", "macros", "time"] }
+notify = "6"
+mime_guess = "2"
+glob = "0.3"
+
+[dev-dependencies]
+tempfile = "3"
+tokio = { workspace = true, features = ["macros", "rt", "time"] }

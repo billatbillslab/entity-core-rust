@@ -1,0 +1,12 @@
+[package]
+name = "entity-route"
+version = "0.8.0"
+edition.workspace = true
+description = "EXTENSION-ROUTE v1.0 — the routing-table storage plane (system/route entity + the match RELAY reads)"
+
+[dependencies]
+entity-ecf.workspace = true
+entity-hash.workspace = true
+entity-entity.workspace = true
+ciborium.workspace = true
+thiserror.workspace = true

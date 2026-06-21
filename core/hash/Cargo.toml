@@ -1,0 +1,11 @@
+[package]
+name = "entity-hash"
+version = "0.8.0"
+edition.workspace = true
+description = "Content hash types for Entity Core Protocol"
+
+[dependencies]
+entity-ecf.workspace = true
+sha2.workspace = true
+ciborium.workspace = true
+thiserror.workspace = true

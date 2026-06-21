@@ -1,0 +1,229 @@
+[workspace]
+resolver = "2"
+members = [
+    "core/ecf",
+    "core/hash",
+    "core/entity",
+    "core/crypto",
+    "core/store",
+    "core/types",
+    "core/capability",
+    "core/wire",
+    "core/handler",
+    "core/protocol",
+    "core/tree",
+    "core/peer",
+    "core/entity-core",
+    "cmd/entity-peer",
+    "cmd/wire-conformance",
+    "extensions/inbox",
+    "extensions/continuation",
+    "extensions/subscription",
+    "extensions/clock",
+    "extensions/revision",
+    "extensions/query",
+    "extensions/history",
+    "extensions/compute",
+    "extensions/handler-ops",
+    "extensions/capability",
+    "extensions/identity",
+    "extensions/attestation",
+    "extensions/quorum",
+    "extensions/role",
+    "extensions/registry",
+    "extensions/discovery",
+    "extensions/relay",
+    "extensions/route",
+    "extensions/durability",
+    "extensions/encryption",
+    "extensions/conformance",
+    "extensions/type-system",
+    "extensions/content",
+    "extensions/storage-substitute-sources",
+    "extensions/storage-substitute-http",
+    "extensions/local-files",
+    "bindings/ffi",
+    "bindings/godot",
+    "bindings/sdk",
+    "bindings/shell",
+    # WASM-only proxy/host pair for browser-deployed peers. Each crate is
+    # #![cfg(target_arch = "wasm32")] at root so native builds compile them
+    # to an empty module. Intentionally NOT in default-members — explicit
+    # `cargo check --target wasm32-unknown-unknown -p ...` lanes in CI
+    # exercise them.
+    "bindings/wasm-worker-protocol",
+    "bindings/wasm-worker-host",
+    "bindings/wasm-worker-proxy",
+    "bindings/wasm-worker-example",
+]
+
+default-members = [
+    "core/ecf",
+    "core/hash",
+    "core/entity",
+    "core/crypto",
+    "core/store",
+    "core/types",
+    "core/capability",
+    "core/wire",
+    "core/handler",
+    "core/protocol",
+    "core/tree",
+    "core/peer",
+    "core/entity-core",
+    "cmd/entity-peer",
+    "extensions/inbox",
+    "extensions/continuation",
+    "extensions/subscription",
+    "extensions/clock",
+    "extensions/revision",
+    "extensions/query",
+    "extensions/history",
+    "extensions/compute",
+    "extensions/handler-ops",
+    "extensions/capability",
+    "extensions/identity",
+    "extensions/attestation",
+    "extensions/quorum",
+    "extensions/role",
+    "extensions/registry",
+    "extensions/discovery",
+    "extensions/relay",
+    "extensions/route",
+    "extensions/encryption",
+    "extensions/conformance",
+    "extensions/type-system",
+    "extensions/content",
+    "extensions/storage-substitute-sources",
+    "extensions/storage-substitute-http",
+    "extensions/local-files",
+]
+
+[workspace.package]
+edition = "2021"
+license = "Apache-2.0"
+repository = "https://github.com/EntityChurch/entity-core-rust"
+
+[workspace.dependencies]
+# External
+ciborium = "0.2"
+ed25519-dalek = { version = "2", features = ["rand_core"] }
+sha2 = "0.10"
+rand = "0.8"
+bs58 = "0.5"
+tokio = { version = "1", features = ["full"] }
+tokio-tungstenite = "0.29"
+async-trait = "0.1"
+thiserror = "2"
+base64 = "0.22"
+clap = { version = "4", features = ["derive"] }
+serde = { version = "1", features = ["derive"] }
+toml = "0.8"
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+rusqlite = { version = "0.31", features = ["bundled"] }
+directories = "5"
+anyhow = "1"
+web-time = "1.1"
+unicode-normalization = "0.1"
+# EXTENSION-ENCRYPTION v1.0 crypto stack (RustCrypto — pure Rust, WASM-clean).
+# Scoped to extensions/encryption; intentionally NOT pulled into core/* so the
+# core compile + WASM surface stays lean (judgment call: crypto primitives live
+# in the extension, not core/crypto).
+x25519-dalek = { version = "2", features = ["static_secrets"] }
+# curve25519-dalek provides the Ed25519→X25519 birational map (EdwardsPoint::
+# to_montgomery) used by the §16 R6 key-separation check. Already in-tree as a
+# transitive dep of both dalek crates; pinned here for the direct use-site.
+curve25519-dalek = "4"
+chacha20poly1305 = "0.10"
+argon2 = "0.5"
+hkdf = "0.12"
+
+# Internal crates
+entity-ecf = { path = "core/ecf" }
+entity-hash = { path = "core/hash" }
+entity-entity = { path = "core/entity" }
+entity-crypto = { path = "core/crypto" }
+entity-store = { path = "core/store" }
+entity-types = { path = "core/types" }
+entity-capability = { path = "core/capability" }
+entity-wire = { path = "core/wire" }
+entity-handler = { path = "core/handler" }
+entity-protocol = { path = "core/protocol" }
+entity-tree = { path = "core/tree" }
+entity-peer = { path = "core/peer" }
+entity-core = { path = "core/entity-core" }
+entity-inbox = { path = "extensions/inbox" }
+entity-continuation = { path = "extensions/continuation" }
+entity-subscription = { path = "extensions/subscription" }
+entity-clock = { path = "extensions/clock" }
+entity-revision = { path = "extensions/revision" }
+entity-query = { path = "extensions/query" }
+entity-history = { path = "extensions/history" }
+entity-compute = { path = "extensions/compute" }
+entity-handler-ops = { path = "extensions/handler-ops" }
+entity-capability-handler = { path = "extensions/capability" }
+entity-identity = { path = "extensions/identity" }
+entity-attestation = { path = "extensions/attestation" }
+entity-quorum = { path = "extensions/quorum" }
+entity-role = { path = "extensions/role" }
+entity-registry = { path = "extensions/registry" }
+entity-discovery = { path = "extensions/discovery" }
+entity-relay = { path = "extensions/relay" }
+entity-route = { path = "extensions/route" }
+entity-encryption = { path = "extensions/encryption" }
+entity-durability = { path = "extensions/durability" }
+entity-conformance = { path = "extensions/conformance" }
+entity-type-system = { path = "extensions/type-system" }
+entity-content = { path = "extensions/content" }
+entity-storage-substitute-sources = { path = "extensions/storage-substitute-sources" }
+entity-storage-substitute-http = { path = "extensions/storage-substitute-http" }
+entity-local-files = { path = "extensions/local-files" }
+entity-sdk = { path = "bindings/sdk" }
+entity-shell = { path = "bindings/shell" }
+data-encoding = "2"
+
+# Per-package optimization overrides for the dev profile.
+#
+# Crypto and CBOR libraries are heavily algorithmic and are pathologically
+# slow when compiled at opt-level=0. They appear on every wire message
+# (verify_request: 2× Ed25519 + multiple CBOR decodes per RPC), so debug
+# builds without these overrides spend most of their time inside dalek's
+# constant-time field arithmetic interpreting per-bit ladder steps as
+# unoptimized stack frames. Build-time impact: small (these crates compile
+# rarely). Runtime impact: ~100× faster verify_request in debug.
+#
+# Same code, just better-compiled — zero security impact.
+[profile.dev.package.ed25519-dalek]
+opt-level = 3
+[profile.dev.package.curve25519-dalek]
+opt-level = 3
+# Ed448 (v7.67 Phase 2) is the same story as Ed25519, worse — its field/scalar
+# arithmetic runs through the RustCrypto generic stack (ed448-goldilocks → ed448
+# → elliptic-curve → crypto-bigint / fiat-crypto) plus SHAKE256, and verify is
+# intrinsically ~10–15× heavier than Ed25519. Without these overrides a single
+# Ed448 verify_request at opt-level=0 is slow enough that a request-heavy
+# responder test (~650 EXECUTEs) blows past the cross-impl validator's per-test
+# timeout — surfaced as a 2m18s rs-48 run that cascaded into 269
+# spurious FAILs. Overrides apply per-package (not transitively), so optimize
+# every heavy crate on the Ed448 path, not just the top-level signing crate.
+[profile.dev.package.ed448-goldilocks]
+opt-level = 3
+[profile.dev.package.ed448]
+opt-level = 3
+[profile.dev.package.elliptic-curve]
+opt-level = 3
+[profile.dev.package.crypto-bigint]
+opt-level = 3
+[profile.dev.package.fiat-crypto]
+opt-level = 3
+[profile.dev.package.shake]
+opt-level = 3
+[profile.dev.package.sha2]
+opt-level = 3
+[profile.dev.package.ciborium]
+opt-level = 3
+[profile.dev.package.ciborium-io]
+opt-level = 3
+[profile.dev.package.ciborium-ll]
+opt-level = 3

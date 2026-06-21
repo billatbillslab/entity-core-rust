@@ -1,0 +1,19 @@
+[package]
+name = "entity-protocol"
+version = "0.8.0"
+edition.workspace = true
+description = "EXECUTE dispatch, connection handshake, authentication"
+
+[dependencies]
+entity-ecf.workspace = true
+entity-hash.workspace = true
+entity-entity.workspace = true
+entity-crypto.workspace = true
+entity-types.workspace = true
+entity-capability.workspace = true
+entity-wire.workspace = true
+entity-handler.workspace = true
+ciborium.workspace = true
+rand.workspace = true
+thiserror.workspace = true
+tracing.workspace = true

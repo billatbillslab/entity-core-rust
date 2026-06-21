@@ -1,0 +1,109 @@
+[package]
+name = "entity-peer"
+version = "0.8.0"
+edition.workspace = true
+description = "Peer, PeerBuilder, and connection management"
+
+[features]
+default = ["inbox", "continuation", "subscription", "clock", "revision", "query", "history", "compute", "handlers", "capability-handler", "identity", "role", "registry", "discovery", "relay", "conformance", "type-system", "content", "local-files", "websocket", "http-live"]
+inbox = ["dep:entity-inbox"]
+continuation = ["dep:entity-continuation"]
+subscription = ["dep:entity-subscription"]
+clock = ["dep:entity-clock"]
+revision = ["dep:entity-revision"]
+query = ["dep:entity-query"]
+history = ["dep:entity-history"]
+compute = ["dep:entity-compute"]
+handlers = ["dep:entity-handler-ops"]
+conformance = ["dep:entity-conformance"]
+capability-handler = ["dep:entity-capability-handler"]
+attestation = ["dep:entity-attestation"]
+quorum = ["dep:entity-quorum", "attestation"]
+identity = ["dep:entity-identity", "quorum"]
+role = ["dep:entity-role"]
+registry = ["dep:entity-registry"]
+discovery = ["dep:entity-discovery"]
+relay = ["dep:entity-relay"]
+type-system = ["dep:entity-type-system"]
+content = ["dep:entity-content"]
+local-files = ["dep:entity-local-files", "content"]
+sqlite = ["entity-store/sqlite", "entity-query?/sqlite"]
+wasm-persist = ["entity-store/wasm-persist"]
+wasm-idb-persist = ["entity-store/wasm-idb-persist"]
+websocket = ["dep:tokio-tungstenite", "dep:futures-util"]
+http-live = ["dep:hyper", "dep:http-body-util", "dep:hyper-util", "dep:bytes", "dep:reqwest"]
+
+[dependencies]
+entity-ecf.workspace = true
+entity-hash.workspace = true
+entity-entity.workspace = true
+entity-crypto.workspace = true
+entity-store.workspace = true
+entity-types.workspace = true
+entity-capability.workspace = true
+entity-wire.workspace = true
+entity-handler.workspace = true
+entity-protocol.workspace = true
+entity-tree.workspace = true
+entity-durability.workspace = true
+entity-inbox = { workspace = true, optional = true }
+entity-continuation = { workspace = true, optional = true }
+entity-subscription = { workspace = true, optional = true }
+entity-clock = { workspace = true, optional = true }
+entity-revision = { workspace = true, optional = true }
+entity-query = { workspace = true, optional = true }
+entity-history = { workspace = true, optional = true }
+entity-compute = { workspace = true, optional = true }
+entity-handler-ops = { workspace = true, optional = true }
+entity-capability-handler = { workspace = true, optional = true }
+entity-identity = { workspace = true, optional = true }
+entity-attestation = { workspace = true, optional = true }
+entity-quorum = { workspace = true, optional = true }
+entity-role = { workspace = true, optional = true }
+entity-registry = { workspace = true, optional = true }
+entity-discovery = { workspace = true, optional = true }
+entity-relay = { workspace = true, optional = true }
+entity-conformance = { workspace = true, optional = true }
+entity-type-system = { workspace = true, optional = true }
+entity-content = { workspace = true, optional = true }
+entity-local-files = { workspace = true, optional = true }
+tokio-tungstenite = { workspace = true, optional = true }
+futures-util = { version = "0.3", optional = true }
+ciborium.workspace = true
+serde = { workspace = true, features = ["derive"] }
+rand.workspace = true
+web-time = "1.1"
+tokio = { version = "1", features = ["sync"] }
+async-trait.workspace = true
+tracing.workspace = true
+thiserror.workspace = true
+
+[target.'cfg(not(target_arch = "wasm32"))'.dependencies]
+tokio = { version = "1", features = ["rt", "rt-multi-thread", "net", "io-util", "time", "macros", "signal", "sync"] }
+hyper = { version = "1", features = ["server", "http1"], optional = true }
+hyper-util = { version = "0.1", features = ["tokio"], optional = true }
+http-body-util = { version = "0.1", optional = true }
+bytes = { version = "1", optional = true }
+# Outbound HTTP client (HttpConnection / R1 in PROPOSAL-TRANSPORT-FAMILY-LIVE-REACHABILITY).
+# Gated by `http-live` alongside the server-side hyper deps. `rustls-tls`
+# avoids the OpenSSL native-link dependency we don't want pulled in.
+reqwest = { version = "0.12", default-features = false, features = ["rustls-tls", "blocking"], optional = true }
+
+[target.'cfg(target_arch = "wasm32")'.dependencies]
+wasm-bindgen-futures = "0.4"
+getrandom = { version = "0.2", features = ["js"] }
+ws_stream_wasm = "0.7"
+futures-util = "0.3"
+futures = "0.3"
+gloo-timers = { version = "0.3", features = ["futures"] }
+wasm-bindgen = "0.2"
+js-sys = "0.3"
+web-sys = { version = "0.3", features = [
+    "MessageEvent",
+    "MessagePort",
+    "MessageChannel",
+] }
+
+[dev-dependencies]
+tempfile = "3"
+reqwest = { version = "0.12", default-features = false, features = ["rustls-tls"] }

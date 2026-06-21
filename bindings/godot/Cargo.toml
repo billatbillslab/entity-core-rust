@@ -1,0 +1,45 @@
+[package]
+name = "entity-core-godot"
+version = "0.8.0"
+edition.workspace = true
+description = "Godot GDExtension bindings for Entity Core Protocol"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+godot = "0.4"
+entity-ecf.workspace = true
+entity-hash.workspace = true
+entity-entity.workspace = true
+entity-capability.workspace = true
+entity-types.workspace = true
+entity-crypto.workspace = true
+entity-store.workspace = true
+entity-handler.workspace = true
+entity-peer.workspace = true
+# Application SDK — wraps the kernel with PeerContext / EntitySDK / scope
+# handles. The Godot binding wraps these in gdext classes. `native-ws`
+# is enabled because Godot runs natively and wants the standard
+# WebSocket transport; `sqlite` enables the on-disk store backend per
+# GUIDE-PERSISTENCE.md §1 (peers/{name}/store.db) — required for the
+# persistence-backed `EntityPeer::boot()` path.
+# identity/role/quorum/attestation features added in Round 5 (γ.4.2
+# driver) so GDScript can dispatch system/identity, system/role, etc.
+# handler ops via execute(). Without these, `peer.execute("system/identity",
+# ...)` silently returns "unknown handler" — the four handler crates are
+# compiled-out by default per entity-sdk/Cargo.toml. Binary-size impact
+# unmeasured; the four extensions are small.
+entity-sdk = { workspace = true, features = [
+    "native-ws",
+    "sqlite",
+    "identity",
+    "role",
+    "quorum",
+    "attestation",
+    "compute",
+] }
+entity-shell.workspace = true
+ciborium.workspace = true
+tokio = { workspace = true, features = ["rt-multi-thread"] }
+cbor-diag = "0.1"

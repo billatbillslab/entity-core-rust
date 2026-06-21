@@ -1,0 +1,14 @@
+[package]
+name = "entity-types"
+version = "0.8.0"
+edition.workspace = true
+description = "Type definitions and TypeRegistry for Entity Core Protocol"
+
+[dependencies]
+entity-ecf.workspace = true
+entity-hash.workspace = true
+entity-entity.workspace = true
+ciborium.workspace = true
+thiserror.workspace = true
+bs58.workspace = true
+sha2.workspace = true
