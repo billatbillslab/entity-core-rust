@@ -59,3 +59,9 @@ path  = "docs/BACKLOG.md"
 title = "Implementation backlog"
 blurb = "Durable, spec-traced forward work for the Rust implementation (not a dated status snapshot)."
 group = "Spec findings"
+
+[[doc]]
+path  = "docs/status/STATUS.md"
+title = "Status"
+blurb = "Current project status — where the project is, recent work, backlog, and what's next."
+group = "Overview"
